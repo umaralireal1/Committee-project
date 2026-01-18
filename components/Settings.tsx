@@ -1,6 +1,6 @@
 import React from 'react';
 import { AppSettings } from '../types';
-import { Save, Settings as SettingsIcon, Coins, CalendarClock } from 'lucide-react';
+import { Save, Settings as SettingsIcon, Coins, CalendarClock, Trash2 } from 'lucide-react';
 
 interface SettingsProps {
   settings: AppSettings;
@@ -20,6 +20,16 @@ export const Settings: React.FC<SettingsProps> = ({ settings, onSave }) => {
     onSave(localSettings);
     setIsSaved(true);
     setTimeout(() => setIsSaved(false), 2000);
+  };
+
+  const handleResetData = () => {
+    if (confirm('DANGER ZONE:\n\nAre you sure you want to delete ALL members, payments, and cycles?\n\nThis cannot be undone.')) {
+        localStorage.removeItem('qisst_members');
+        localStorage.removeItem('qisst_cycles');
+        localStorage.removeItem('qisst_payments');
+        // We keep settings
+        window.location.reload();
+    }
   };
 
   // Helper calculation for display
@@ -142,6 +152,16 @@ export const Settings: React.FC<SettingsProps> = ({ settings, onSave }) => {
           <Save className="w-5 h-5" />
           {isSaved ? 'Settings Saved!' : 'Save Settings'}
         </button>
+
+        <div className="pt-8 border-t border-slate-200">
+            <button
+            onClick={handleResetData}
+            className="w-full flex items-center justify-center gap-2 bg-red-50 text-red-600 py-3 rounded-xl font-bold hover:bg-red-100 transition-colors"
+            >
+            <Trash2 className="w-5 h-5" />
+            Reset All Data (Clear Members)
+            </button>
+        </div>
       </div>
     </div>
   );
